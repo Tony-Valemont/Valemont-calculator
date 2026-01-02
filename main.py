@@ -1,49 +1,47 @@
 import flet as ft
 
 def main(page: ft.Page):
-    # Максимально простые настройки
+    # Максимально лёгкие настройки (быстро грузится)
     page.title = "VALEMONT"
     page.bgcolor = "#000000"
-    page.padding = 20
+    page.padding = 16
     page.horizontal_alignment = "center"
     page.scroll = "auto"
 
     GOLD = "#D4AF37"
-    INPUT_BG = "#121212"
 
-    # Поля ввода — ТОЛЬКО через label/value
+    # Поля ввода — цифры на телефоне
     weight_input = ft.TextField(
-        label="ВЕС (ГРАММЫ)",
+        label="ВЕС (Г)",
         value="",
-        width=280,
+        width=260,
         text_align="center",
-        bgcolor=INPUT_BG,
         border_color=GOLD,
-        color="white"
+        color="white",
+        keyboard_type=ft.KeyboardType.NUMBER
     )
 
     source_probe = ft.TextField(
         label="ИСХОДНАЯ ПРОБА",
         value="",
-        width=280,
+        width=260,
         text_align="center",
-        bgcolor=INPUT_BG,
         border_color=GOLD,
-        color="white"
+        color="white",
+        keyboard_type=ft.KeyboardType.NUMBER
     )
 
     target_probe = ft.TextField(
         label="ЦЕЛЕВАЯ ПРОБА",
         value="585",
-        width=280,
+        width=260,
         text_align="center",
-        bgcolor=INPUT_BG,
         border_color=GOLD,
-        color="white"
+        color="white",
+        keyboard_type=ft.KeyboardType.NUMBER
     )
 
-    # Результат
-    result_text = ft.Text("0.000", size=42, color=GOLD, weight="bold")
+    result_text = ft.Text("0.000", size=36, color=GOLD)
 
     def calculate(e):
         try:
@@ -52,8 +50,7 @@ def main(page: ft.Page):
             p2 = float((target_probe.value or "585").replace(",", "."))
 
             if w > 0 and p1 > 0 and p2 > 0:
-                res = (w * p1) / p2
-                result_text.value = "{:.3f}".format(res)
+                result_text.value = "{:.3f}".format((w * p1) / p2)
             else:
                 result_text.value = "0.000"
         except:
@@ -61,32 +58,30 @@ def main(page: ft.Page):
 
         page.update()
 
-    # Кнопка — старый синтаксис
     calc_button = ft.ElevatedButton(
         "РАССЧИТАТЬ",
         bgcolor=GOLD,
         color="black",
-        width=280,
-        height=50,
+        width=260,
+        height=48,
         on_click=calculate
     )
 
-    # Интерфейс
     page.add(
         ft.Column(
-            spacing=18,
+            spacing=14,
             horizontal_alignment="center",
             controls=[
-                ft.Text("VALEMONT", size=32, color=GOLD, weight="bold"),
-                ft.Text("ЮВЕЛИРНЫЙ ИНСТРУМЕНТ", size=11, color=GOLD),
+                ft.Text("VALEMONT", size=28, color=GOLD),
+                ft.Text("ЮВЕЛИРНЫЙ КАЛЬКУЛЯТОР", size=10, color=GOLD),
                 weight_input,
                 source_probe,
                 target_probe,
-                ft.Text("ИТОГОВЫЙ ВЕС", size=12, color=GOLD),
                 result_text,
                 calc_button
             ]
         )
     )
 
-ft.app(target=main)
+# 🔑 ВАЖНО: открывается на телефоне
+ft.app(target=main, view=ft.AppView.WEB_BROWSER)
