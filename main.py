@@ -15,7 +15,7 @@ def main(page: ft.Page):
         return ft.Container(
             width=260,
             height=52,
-            alignment=ft.alignment.center,
+            alignment=ft.alignment.CENTER,
             border_radius=16,
             border=ft.border.all(1, GOLD),
             content=ft.TextField(
@@ -45,8 +45,11 @@ def main(page: ft.Page):
     def calculate(e):
         """Calculate gold price"""
         try:
-            weight = float(weight_box.content.value.replace(",", ".") or 0)
-            probe = float(probe_box.content.value.replace(",", ".") or 585)
+            weight_val = weight_box.content.value
+            probe_val = probe_box.content.value
+            
+            weight = float(weight_val.replace(",", ".") if weight_val else 0)
+            probe = float(probe_val.replace(",", ".") if probe_val else 585)
             
             if weight > 0 and probe > 0:
                 result = (weight * (probe / 1000)) / 0.585
@@ -61,7 +64,7 @@ def main(page: ft.Page):
     calculate_button = ft.Container(
         width=260,
         height=56,
-        alignment=ft.alignment.center,
+        alignment=ft.alignment.CENTER,
         border_radius=20,
         bgcolor=GOLD,
         on_click=calculate,
@@ -108,4 +111,5 @@ def main(page: ft.Page):
         )
     )
 
-ft.app(target=main, view=ft.AppView.WEB_BROWSER)
+if __name__ == "__main__":
+    ft.app(target=main)
