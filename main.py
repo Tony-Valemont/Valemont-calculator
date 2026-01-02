@@ -1,52 +1,58 @@
 import flet as ft
 
 def main(page: ft.Page):
-    # Убираем все настройки, кроме цвета фона
+    # Самые базовые настройки без лишних функций
+    page.title = "VALEMONT"
     page.bgcolor = "#000000"
     page.horizontal_alignment = "center"
+    page.vertical_alignment = "center"
     
-    # Цвет золота
     GOLD = "#D4AF37"
 
-    # Создаем поля ввода без единого сложного атрибута
-    w = ft.TextField(label="VES (GR)", border_color=GOLD, color="white", text_align="center", width=250)
-    p1 = ft.TextField(label="IZ PROBY", border_color=GOLD, color="white", text_align="center", width=250)
-    p2 = ft.TextField(label="V PROBU", value="585", border_color=GOLD, color="white", text_align="center", width=250)
+    # Поля ввода на русском
+    w_input = ft.TextField(label="ВЕС (Г)", border_color=GOLD, color="white", text_align="center", width=280)
+    p_from = ft.TextField(label="ИСХОДНАЯ ПРОБА", border_color=GOLD, color="white", text_align="center", width=280)
+    p_to = ft.TextField(label="ЦЕЛЕВАЯ ПРОБА", value="585", border_color=GOLD, color="white", text_align="center", width=280)
     
-    # Текст для вывода (точность 3 знака)
-    res_txt = ft.Text("0.000", size=40, color=GOLD)
+    # Текст результата с точностью 3 знака (5.858)
+    res_text = ft.Text("0.000", size=45, color=GOLD)
 
-    def on_click(e):
+    def do_calc(e):
         try:
-            # Считаем по формуле (Вес * Проба1) / Проба2
-            val = (float(w.value.replace(",", ".")) * float(p1.value.replace(",", "."))) / float(p2.value.replace(",", "."))
-            res_txt.value = "{:.3f}".format(val)
+            # Математика: (Вес * Проба1) / Проба2
+            weight = float(w_input.value.replace(",", "."))
+            pf = float(p_from.value.replace(",", "."))
+            pt = float(p_to.value.replace(",", "."))
+            
+            final = (weight * pf) / pt
+            res_text.value = "{:.3f}".format(final) # Даст 5.858
         except:
-            res_txt.value = "Error"
+            res_text.value = "Ошибка"
         page.update()
 
-    # Простая кнопка-контейнер
+    # Кнопка без использования атрибутов 'center' или 'colors'
     calc_btn = ft.Container(
-        content=ft.Text("RASSCHITAT", color="black", weight="bold"),
+        content=ft.Text("РАССЧИТАТЬ", color="black", weight="bold"),
         bgcolor=GOLD,
         padding=15,
-        border_radius=10,
-        on_click=on_click,
-        alignment=ft.alignment.center,
-        width=250
+        border_radius=12,
+        on_click=do_calc,
+        alignment=ft.Alignment(0, 0), # Вместо .center
+        width=280
     )
 
-    # Добавляем всё в колонку
+    # Собираем интерфейс
     page.add(
         ft.Column(
             horizontal_alignment="center",
+            spacing=20,
             controls=[
-                ft.Text("VALEMONT", size=30, color=GOLD),
-                w, 
-                p1, 
-                p2,
-                ft.Text("RESULT:", color=GOLD),
-                res_txt,
+                ft.Text("VALEMONT", size=35, color=GOLD, weight="bold"),
+                w_input,
+                p_from,
+                p_to,
+                ft.Text("РЕЗУЛЬТАТ:", size=12, color=GOLD),
+                res_text,
                 calc_btn
             ]
         )
